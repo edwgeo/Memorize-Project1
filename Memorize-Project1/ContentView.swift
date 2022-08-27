@@ -11,17 +11,48 @@ struct ContentView: View {
     @State
     var vehicleEmojis = ["🛸", "🚀", "🚗", "⛽", "🛶", "🚘", "🚙", "🏎", "🛵", "🏍", "🚐", "🚛", "🛳", "🚑", "🚜", "🛴", "🚂", "🚁", "🚟", "🛺", "🚄", "🛥"]
     let column = GridItem(.adaptive(minimum:60), spacing: 20)
+    @State
+    var cardCount = 10
     
     var body: some View {
-        ScrollView {
-            LazyVGrid (columns: [column, column, column], spacing: 20.0) {
-                ForEach(vehicleEmojis, id: \.self) { emoji in
-                    CardView(input: emoji)
+        VStack {
+            Text("Memorize!").font(.largeTitle).foregroundColor(Color.red)
+            ScrollView {
+                LazyVGrid (columns: [column, column, column], spacing: 20.0) {
+                    ForEach(vehicleEmojis[..<cardCount], id: \.self) { emoji in
+                        CardView(input: emoji)
+                    }
                 }
+                .foregroundColor(Color.pink)
+                .padding(.horizontal, 20.0)
             }
-            .foregroundColor(Color.pink)
-            .padding(.horizontal, 20.0)
+            HStack {
+                Button (action: {
+                    if cardCount < vehicleEmojis.count {
+                            cardCount += 1
+                    }
+                }, label: {
+                    VStack {
+                        Text("Add")
+                        Image(systemName: "plus.circle").font(.title)
+                    }
+                })
+                Spacer()
+                Button (action: {
+                    if cardCount > 0 {
+                            cardCount -= 1
+                    }
+                }, label: {
+                    VStack {
+                        Text("Remove")
+                        Image(systemName: "minus.circle").font(.title)
+                    }
+                })
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 10)
         }
+        
     }
 }
 
