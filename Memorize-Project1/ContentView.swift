@@ -8,51 +8,103 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State
-    var vehicleEmojis = ["🛸", "🚀", "🚗", "⛽", "🛶", "🚘", "🚙", "🏎", "🛵", "🏍", "🚐", "🚛", "🛳", "🚑", "🚜", "🛴", "🚂", "🚁", "🚟", "🛺", "🚄", "🛥"]
     let column = GridItem(.adaptive(minimum:60), spacing: 20)
+    
     @State
     var cardCount = 10
     
+    @State
+    var vehicleEmojis = ["🛸", "🚀", "🚗", "⛽", "🛶", "🚘", "🚙", "🏎", "🛵", "🏍", "🚐", "🚛", "🛳", "🚑", "🚜", "🛴", "🚂", "🚁", "🚟", "🛺", "🚄", "🛥"]
+    @State
+    var faceEmojis = ["🥰", "😇", "😣", "😤", "😘", "🥳", "🤠", "🤯", "🤑", "🤢", "😎", "🥺", "🥵", "🥶", "😈", "🤡", "👹", "👽", "😰", "😱", "🥴", "🤐"]
+    @State
+    var foodEmojis = ["🍇", "🍈", "🍉", "🍊", "🍋", "🍌", "🍍", "🥭", "🍎", "🍏", "🍐", "🍑", "🍒", "🍓", "🧄", "🥝", "🍅", "🌶", "🥥", "🥑", "🍆", "🥔"]
+    
+    //this is the same as the vehicleEmojis
+    @State var emojis = ["🛸", "🚀", "🚗", "⛽", "🛶", "🚘", "🚙", "🏎", "🛵", "🏍", "🚐", "🚛", "🛳", "🚑", "🚜", "🛴", "🚂", "🚁", "🚟", "🛺", "🚄", "🛥"]
+    
     var body: some View {
         VStack {
-            Text("Memorize!").font(.largeTitle).foregroundColor(Color.red)
+            Text("Memorize!").font(.title).foregroundColor(Color.red)
+            HStack {
+                vehicleButton
+                faceButton
+                foodButton
+            }
+            .padding(.vertical, 10)
+            
+            
             ScrollView {
                 LazyVGrid (columns: [column, column, column], spacing: 20.0) {
-                    ForEach(vehicleEmojis[..<cardCount], id: \.self) { emoji in
+                    ForEach((emojis[..<cardCount]), id: \.self) { emoji in
                         CardView(input: emoji)
                     }
                 }
                 .foregroundColor(Color.pink)
                 .padding(.horizontal, 20.0)
             }
+            
             HStack {
                 Button (action: {
-                    if cardCount < vehicleEmojis.count {
-                            cardCount += 1
-                    }
-                }, label: {
-                    VStack {
-                        Text("Add")
-                        Image(systemName: "plus.circle").font(.title)
-                    }
-                })
-                Spacer()
-                Button (action: {
-                    if cardCount > 0 {
+                    if cardCount > 1 {
                             cardCount -= 1
                     }
                 }, label: {
                     VStack {
-                        Text("Remove")
                         Image(systemName: "minus.circle").font(.title)
+                        Text("Remove")
+                    }
+                })
+                Spacer()
+                Button (action: {
+                    if cardCount < emojis.count {
+                            cardCount += 1
+                    }
+                }, label: {
+                    VStack {
+                        Image(systemName: "plus.circle").font(.title)
+                        Text("Add")
                     }
                 })
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 10)
         }
-        
+    }
+    var vehicleButton: some View {
+        Button {
+            emojis = vehicleEmojis.shuffled()
+        } label: {
+            VStack {
+                Text("Vehicles")
+                Image(systemName: "car")
+            }
+        }
+        .padding(/*@START_MENU_TOKEN@*/.horizontal/*@END_MENU_TOKEN@*/)
+    }
+    
+    var faceButton: some View {
+        Button {
+            emojis = faceEmojis.shuffled()
+        } label: {
+            VStack {
+                Text("Faces")
+                Image(systemName: "face.smiling")
+            }
+        }
+        .padding(/*@START_MENU_TOKEN@*/.horizontal/*@END_MENU_TOKEN@*/)
+    }
+    
+    var foodButton: some View {
+        Button {
+            emojis = foodEmojis.shuffled()
+        } label: {
+            VStack {
+                Text("Food")
+                Image(systemName: "fork.knife")
+            }
+        }
+        .padding(/*@START_MENU_TOKEN@*/.horizontal/*@END_MENU_TOKEN@*/)
     }
 }
 
@@ -89,5 +141,6 @@ struct CardView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            .previewInterfaceOrientation(.portrait)
     }
 }
